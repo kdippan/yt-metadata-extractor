@@ -5,251 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YT Metadata Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: {
-                            yellow: '#FFDD00',
-                            black: '#0F0F0F',
-                            gray: '#F4F4F5'
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.5s ease-out'
-                    },
-                    keyframes: {
-                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                        slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }
-                    }
+                    colors: { brand: { yellow: '#FFDD00', black: '#0F0F0F' } }
                 }
             }
         }
     </script>
-    <style>
-        .loader { border-top-color: #FFDD00; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
-        @-webkit-keyframes spinner { 0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(360deg); } }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Smooth Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-    </style>
 </head>
-<body class="bg-gray-50 text-brand-black min-h-screen flex flex-col">
+<body class="bg-gray-50 text-brand-black">
 
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
-                    <div class="bg-brand-yellow p-2 rounded-lg text-brand-black font-bold text-xl">
-                        <i class="fab fa-youtube"></i>
-                    </div>
-                    <span class="font-bold text-xl tracking-tight">YT Metadata<span class="text-brand-yellow">Pro</span></span>
-                </div>
-                <div class="hidden md:flex gap-6 text-sm font-semibold text-gray-600">
-                    <a href="#" class="hover:text-brand-black transition">Home</a>
-                    <a href="#" class="hover:text-brand-black transition">Pricing</a>
-                    <a href="#" class="hover:text-brand-black transition">API</a>
-                </div>
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 font-bold text-xl tracking-tight">
+                <div class="bg-brand-yellow p-1.5 rounded"><i class="fab fa-youtube"></i></div>
+                YT Metadata<span class="text-brand-yellow">Pro</span>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <main class="max-w-7xl mx-auto px-4 py-8">
         
-        <div class="text-center max-w-2xl mx-auto mb-12 animate-slide-up">
-            <h1 class="text-4xl font-bold mb-4">Unlock Video Insights</h1>
-            <p class="text-gray-500 mb-8 text-lg">Extract metadata, tags, transcripts, and download links instantly.</p>
-            
-            <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-brand-yellow to-orange-400 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
-                <div class="relative flex bg-white rounded-xl shadow-lg overflow-hidden">
-                    <input type="text" id="videoUrl" placeholder="Paste YouTube URL here..." 
-                        class="w-full px-6 py-4 outline-none text-lg text-gray-700 placeholder-gray-400">
-                    <button onclick="fetchData()" id="searchBtn"
-                        class="bg-brand-black text-white px-8 py-4 font-bold hover:bg-gray-800 transition flex items-center gap-2">
-                        <span>Analyze</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
+        <div class="max-w-2xl mx-auto mb-10 text-center">
+            <h1 class="text-3xl font-bold mb-6">Professional Video Intelligence</h1>
+            <div class="flex shadow-lg rounded-xl overflow-hidden">
+                <input type="text" id="videoUrl" placeholder="Paste YouTube URL..." class="flex-1 px-6 py-4 outline-none">
+                <button onclick="fetchData()" class="bg-brand-black text-white px-8 font-bold hover:bg-gray-800">Analyze</button>
             </div>
         </div>
 
-        <div id="history-section" class="hidden mb-12 animate-fade-in">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold flex items-center gap-2"><i class="fas fa-history text-gray-400"></i> Recent Activity</h3>
-                <button onclick="clearHistory()" class="text-xs text-red-500 hover:underline">Clear History</button>
-            </div>
-            <div id="history-list" class="flex gap-4 overflow-x-auto pb-4">
-                </div>
+        <div id="loader" class="hidden text-center py-12">
+            <i class="fas fa-circle-notch fa-spin text-4xl text-brand-yellow"></i>
+            <p class="mt-4 text-gray-500 font-medium">Extracting deep metadata...</p>
         </div>
 
-        <div id="loader" class="hidden flex flex-col items-center justify-center py-20 animate-fade-in">
-            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-            <p class="text-gray-500 font-medium">Analyzing video data...</p>
-            <p class="text-xs text-gray-400 mt-2">Connecting to secure server</p>
-        </div>
+        <div id="dashboard" class="hidden space-y-6">
 
-        <div id="error-box" class="hidden bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-r shadow-sm animate-fade-in">
-            <div class="flex items-center">
-                <div class="flex-shrink-0"><i class="fas fa-exclamation-circle text-red-500 text-xl"></i></div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800" id="error-title">Error</h3>
-                    <p class="text-sm text-red-700 mt-1" id="error-msg">Something went wrong.</p>
+            <div class="bg-white rounded-xl shadow-sm border p-6 flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/3">
+                    <img id="thumb" class="rounded-lg w-full shadow-md">
                 </div>
-            </div>
-        </div>
-
-        <div id="results" class="hidden animate-slide-up space-y-8">
-            
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col md:flex-row">
-                <div class="md:w-1/3 relative group">
-                    <img id="thumb" src="" alt="Thumbnail" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition"></div>
-                </div>
-                <div class="p-6 md:w-2/3 flex flex-col justify-between">
+                <div class="md:w-2/3 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="px-3 py-1 bg-brand-yellow/20 text-yellow-800 text-xs font-bold rounded-full uppercase tracking-wider">Video</span>
-                            <span id="video-date" class="text-gray-400 text-xs"></span>
-                        </div>
-                        <h2 id="title" class="text-2xl font-bold leading-tight mb-2 text-gray-900"></h2>
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <span id="channel" class="font-semibold text-gray-700"></span>
+                        <h2 id="video-title" class="text-2xl font-bold mb-2"></h2>
+                        <div class="flex items-center gap-3 text-gray-600 mb-4">
+                            <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" id="video-id-badge">ID</span>
+                            <span id="publish-date" class="text-sm"></span>
                         </div>
                     </div>
-                    
-                    <div class="grid grid-cols-3 gap-4 border-t border-gray-100 pt-4 mt-4">
+                    <div class="grid grid-cols-3 gap-4 border-t pt-4">
                         <div class="text-center md:text-left">
-                            <p class="text-gray-400 text-xs uppercase font-bold">Views</p>
-                            <p id="views" class="text-xl font-bold text-gray-800"></p>
+                            <div class="text-2xl font-bold" id="stat-views">-</div>
+                            <div class="text-xs text-gray-400 uppercase font-bold">Views</div>
                         </div>
                         <div class="text-center md:text-left">
-                            <p class="text-gray-400 text-xs uppercase font-bold">Likes</p>
-                            <p id="likes" class="text-xl font-bold text-gray-800"></p>
+                            <div class="text-2xl font-bold" id="stat-likes">-</div>
+                            <div class="text-xs text-gray-400 uppercase font-bold">Likes</div>
                         </div>
                         <div class="text-center md:text-left">
-                            <p class="text-gray-400 text-xs uppercase font-bold">Comments</p>
-                            <p id="comments" class="text-xl font-bold text-gray-800"></p>
+                            <div class="text-2xl font-bold" id="stat-comments">-</div>
+                            <div class="text-xs text-gray-400 uppercase font-bold">Comments</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <div class="lg:col-span-2 space-y-8">
-                    
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                            <i class="fas fa-align-left text-brand-yellow"></i> Description
-                        </h3>
-                        <div class="relative">
-                            <p id="desc-text" class="text-gray-600 text-sm whitespace-pre-line leading-relaxed h-32 overflow-hidden transition-all duration-300"></p>
-                            <div id="desc-fade" class="absolute bottom-0 w-full h-12 bg-gradient-to-t from-white to-transparent"></div>
-                        </div>
-                        <button id="toggle-desc-btn" onclick="toggleDescription()" class="mt-2 text-sm font-bold text-brand-black hover:underline">Read More</button>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold flex items-center gap-2">
-                                <i class="fas fa-tags text-brand-yellow"></i> Tags
-                            </h3>
-                            <button onclick="copyTags()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded text-gray-600 transition">Copy All</button>
-                        </div>
-                        <div id="tags" class="flex flex-wrap gap-2"></div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-bold flex items-center gap-2">
-                                <i class="fas fa-closed-captioning text-brand-yellow"></i> Transcript
-                            </h3>
-                            <button id="trans-btn" onclick="fetchTranscript()" class="text-sm bg-brand-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition shadow-lg shadow-brand-yellow/20">
-                                Load Transcript
-                            </button>
-                        </div>
-                        <div id="trans-container" class="hidden mt-4">
-                            <div id="trans-text" class="bg-gray-50 p-4 rounded-lg text-sm text-gray-700 h-64 overflow-y-auto leading-relaxed border border-gray-200"></div>
-                            <button onclick="copyTranscript()" class="mt-3 text-xs text-gray-500 hover:text-brand-black"><i class="far fa-copy"></i> Copy Text</button>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-2"><i class="fas fa-user-circle"></i> Channel</div>
+                    <div id="meta-channel" class="font-bold text-lg truncate"></div>
+                    <div id="meta-channel-id" class="text-xs text-gray-500 font-mono mt-1"></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-2"><i class="fas fa-sliders-h"></i> Specs</div>
+                    <div class="flex gap-2">
+                        <span id="meta-def" class="bg-brand-black text-white text-xs px-2 py-1 rounded">HD</span>
+                        <span id="meta-dim" class="bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded">2D</span>
+                        <span id="meta-dur" class="font-mono text-sm font-bold ml-auto"></span>
                     </div>
                 </div>
-
-                <div class="space-y-8">
-                    
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                            <i class="fas fa-download text-brand-yellow"></i> Downloads
-                        </h3>
-                        <p class="text-xs text-gray-500 mb-4">Securely generated links via backend.</p>
-                        
-                        <button id="dl-btn" onclick="fetchFormats()" class="w-full bg-brand-yellow text-brand-black font-bold py-3 rounded-lg hover:bg-yellow-400 transition mb-4 shadow-lg shadow-yellow-200">
-                            Analyze Formats
-                        </button>
-                        
-                        <div id="dl-links" class="space-y-2"></div>
-                    </div>
-
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                         <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                            <i class="fas fa-code text-brand-yellow"></i> Developer Data
-                        </h3>
-                        <div class="bg-gray-900 rounded-lg p-4 mb-4 relative group">
-                            <pre id="json-preview" class="text-green-400 text-xs font-mono h-32 overflow-hidden">Click 'Show' to view raw JSON</pre>
-                            <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition cursor-pointer" onclick="toggleJsonModal()">
-                                <span class="text-white font-bold text-sm">View Full JSON</span>
-                            </div>
-                        </div>
-                        <button onclick="downloadJsonFile()" class="w-full border border-gray-200 text-gray-600 font-semibold py-2 rounded-lg hover:bg-gray-50 transition">
-                            Download .JSON
-                        </button>
-                    </div>
-
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-2"><i class="fas fa-shield-alt"></i> License</div>
+                    <div id="meta-license" class="font-bold text-sm capitalize"></div>
+                    <div id="meta-privacy" class="text-xs text-green-600 font-bold mt-1 uppercase"></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border shadow-sm">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-2"><i class="fas fa-map-marker-alt"></i> Context</div>
+                    <div id="meta-location" class="font-bold text-sm">Not set</div>
+                    <div id="meta-kids" class="text-xs text-gray-500 mt-1"></div>
                 </div>
             </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-white rounded-xl border p-6">
+                    <h3 class="font-bold mb-4">Description</h3>
+                    <div id="desc-box" class="text-sm text-gray-600 h-32 overflow-hidden relative">
+                        <p id="video-desc" class="whitespace-pre-line"></p>
+                        <div class="absolute bottom-0 w-full h-10 bg-gradient-to-t from-white to-transparent"></div>
+                    </div>
+                    <button onclick="toggleDesc()" class="text-xs font-bold text-brand-black mt-2 uppercase tracking-wide">Read More</button>
+                    
+                    <div class="mt-6">
+                        <h4 class="font-bold text-sm mb-3">Tags</h4>
+                        <div id="video-tags" class="flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl border p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold">Transcript</h3>
+                            <button onclick="getTranscript()" class="text-xs bg-brand-black text-white px-3 py-1 rounded hover:bg-gray-800">Load</button>
+                        </div>
+                        <div id="transcript-box" class="hidden h-40 overflow-y-auto text-xs text-gray-600 bg-gray-50 p-3 rounded border"></div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border p-6">
+                        <h3 class="font-bold mb-4">Downloads</h3>
+                        <button id="dl-btn" onclick="getFormats()" class="w-full bg-brand-yellow py-2 rounded font-bold text-sm hover:brightness-95 transition">Analyze Links</button>
+                        <div id="dl-list" class="mt-4 space-y-2 text-xs"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
-
-    <footer class="bg-white border-t border-gray-200 mt-12 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm">© 2026 YT Metadata Pro. Designed for Creators.</p>
-        </div>
-    </footer>
-
-    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transform translate-y-full transition-transform duration-300 z-50 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div class="text-sm text-gray-600">
-            <i class="fas fa-cookie-bite text-brand-yellow text-xl mr-2"></i>
-            We use local storage to save your search history for a better experience.
-        </div>
-        <button onclick="acceptCookies()" class="bg-brand-black text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-gray-800 transition">
-            Accept
-        </button>
-    </div>
-
-    <div id="json-modal" class="fixed inset-0 bg-black/80 hidden z-[60] flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl w-full max-w-4xl max-h-[90vh] flex flex-col">
-            <div class="p-4 border-b flex justify-between items-center">
-                <h3 class="font-bold">Raw JSON Data</h3>
-                <button onclick="toggleJsonModal()" class="text-gray-500 hover:text-black"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="p-0 overflow-auto flex-grow bg-gray-900">
-                <pre id="json-full" class="text-green-400 text-xs font-mono p-4"></pre>
-            </div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
